@@ -18,9 +18,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
 	"log"
 	"net"
@@ -33,6 +30,10 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 type PIDFile struct {
@@ -42,7 +43,7 @@ type PIDFile struct {
 var (
 	UpdateMappingConfig map[string]interface{}
 	StartBeego          = true
-	Version             = "1.3.7"
+	Version             = "1.3.9"
 	LogPath             = beego.AppConfig.DefaultString("LogPath", "/home/openrasp/logs")
 	LogApiPath          = LogPath + "/api"
 	PidFileName         = LogPath + "/pid.file"
