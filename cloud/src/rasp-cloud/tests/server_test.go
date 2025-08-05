@@ -1,16 +1,17 @@
 package test
 
 import (
-	"testing"
-	"rasp-cloud/tests/inits"
-	"rasp-cloud/tests/start"
-	. "github.com/smartystreets/goconvey/convey"
-	"rasp-cloud/models"
-	"github.com/bouk/monkey"
 	"errors"
-	"gopkg.in/mgo.v2"
 	"rasp-cloud/es"
 	"rasp-cloud/kafka"
+	"rasp-cloud/models"
+	"rasp-cloud/tests/inits"
+	"rasp-cloud/tests/start"
+	"testing"
+
+	"github.com/bouk/monkey"
+	. "github.com/smartystreets/goconvey/convey"
+	"gopkg.in/mgo.v2"
 )
 
 func getValidServerUrl() *models.ServerUrl {
@@ -21,10 +22,10 @@ func getValidServerUrl() *models.ServerUrl {
 }
 
 func getValidKafkaConfig() *kafka.Kafka {
-	return &kafka.Kafka {
-		KafkaAddr: []string{"127.0.0.1:8090"},
-		KafkaUser: "",
-		KafkaPwd: "",
+	return &kafka.Kafka{
+		KafkaAddr:   "127.0.0.1:8090",
+		KafkaUser:   "",
+		KafkaPwd:    "",
 		KafkaEnable: true,
 	}
 }
@@ -37,7 +38,7 @@ func TestPutServerUrl(t *testing.T) {
 		})
 
 		Convey("when the mongodb has errors", func() {
-			monkey.Patch(models.PutServerUrl, func(*models.ServerUrl) (error) {
+			monkey.Patch(models.PutServerUrl, func(*models.ServerUrl) error {
 				return errors.New("")
 			})
 			r := inits.GetResponse("POST", "/v1/api/server/url", inits.GetJson(getValidServerUrl()))
@@ -125,7 +126,7 @@ func TestClearLogs(t *testing.T) {
 		})
 		Convey("when es delete logs error", func() {
 			path := "/v1/api/server/clear_logs"
-			monkey.Patch(es.DeleteLogs, func(index string) (error) {
+			monkey.Patch(es.DeleteLogs, func(index string) error {
 				return errors.New("")
 			})
 			defer monkey.Unpatch(es.DeleteLogs)

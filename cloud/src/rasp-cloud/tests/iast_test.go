@@ -1,16 +1,17 @@
 package test
 
 import (
-	"testing"
-	. "github.com/smartystreets/goconvey/convey"
-	"rasp-cloud/tests/inits"
-	"rasp-cloud/tests/start"
-	"github.com/bouk/monkey"
-	"reflect"
-	"github.com/astaxie/beego/context"
-	"rasp-cloud/models"
 	"errors"
 	"rasp-cloud/conf"
+	"rasp-cloud/models"
+	"rasp-cloud/tests/inits"
+	"rasp-cloud/tests/start"
+	"reflect"
+	"testing"
+
+	"github.com/astaxie/beego/context"
+	"github.com/bouk/monkey"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestIastConnection(t *testing.T) {
@@ -31,7 +32,7 @@ func TestIastConnection(t *testing.T) {
 
 		Convey("when the mongodb has errors", func() {
 			monkey.Patch(models.UpsertRaspById,
-				func(id string, rasp *models.Rasp) (error) {
+				func(id string, rasp *models.Rasp) error {
 					return errors.New("")
 				},
 			)
@@ -198,7 +199,7 @@ func TestIastConnection(t *testing.T) {
 	})
 }
 
-func TestSearchRasp(t *testing.T) {
+func TestSearchRaspIast(t *testing.T) {
 	Convey("Subject: Test Rasp Search Api\n", t, func() {
 		Convey("when the param is valid", func() {
 			r := inits.GetResponse("POST", "/v1/api/rasp/search", inits.GetJson(
@@ -239,7 +240,7 @@ func TestSearchRasp(t *testing.T) {
 	})
 }
 
-func TestDeleteRasp(t *testing.T) {
+func TestDeleteRaspIast(t *testing.T) {
 	Convey("Subject: Test Rasp Delete Api\n", t, func() {
 		Convey("delete the rasp with id", func() {
 			rasp := &models.Rasp{
@@ -268,7 +269,7 @@ func TestDeleteRasp(t *testing.T) {
 			monkey.Unpatch(models.FindRasp)
 			So(r.Status, ShouldBeGreaterThan, 0)
 
-			monkey.Patch(models.RemoveRaspById, func(id string) (error) {
+			monkey.Patch(models.RemoveRaspById, func(id string) error {
 				return errors.New("")
 			})
 			r = inits.GetResponse("POST", "/v1/api/rasp/delete", inits.GetJson(map[string]interface{}{
@@ -279,7 +280,7 @@ func TestDeleteRasp(t *testing.T) {
 			So(r.Status, ShouldBeGreaterThan, 0)
 
 			models.UpsertRaspById(rasp.Id, rasp)
-			monkey.Patch(models.RemoveRaspById, func(id string) (error) {
+			monkey.Patch(models.RemoveRaspById, func(id string) error {
 				return nil
 			})
 			defer monkey.Unpatch(models.RemoveRaspById)
